@@ -5,6 +5,7 @@ const path = require('path');
 const cors = require('cors');
 const compression = require('compression');
 const albumEndpoint = require('./album/AlbumController');
+const authenticationEndpoint = require('./authentication/AuthenticationController');
 
 // Validate environment variables
 validateEnvironmentVariables();
@@ -69,6 +70,7 @@ function initializeExpressApp() {
  */
 function registerApiRoutes(app) {
   app.use('/api/albummanagement', albumEndpoint);
+  app.use('/api/authentication', authenticationEndpoint); 
 }
 
 /**
