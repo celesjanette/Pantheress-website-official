@@ -4,11 +4,18 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const compression = require('compression');
+
+const mongoose = require('mongoose');
+const { databaseConnectionString } = require('../../config');
+
 const albumEndpoint = require('./album/AlbumController');
 const authenticationEndpoint = require('./authentication/AuthenticationController');
 
+
 // Validate environment variables
 validateEnvironmentVariables();
+
+setupDatabaseConnection();
 
 // Initialize the Express application
 const app = initializeExpressApp();
@@ -29,6 +36,38 @@ setupGracefulShutdownHandlers(server);
 
 // Error and process event handling
 setupErrorHandlers();
+
+/**
+ * Function to setup the database connection with Mongoose
+ */
+function setupDatabaseConnection() {
+  const options = {
+    useUnifiedTopology: true,
+    autoIndex: true,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    family: 4,
+  };
+
+  mongoose.connection.on('connected', () => {
+    console.log('[MONGODB] - Connected!');
+  });
+
+  mongoose.connection.on('error', (error) => {
+    console.error('[MONGODB] - failed to connect on startup: ', error);
+  });
+
+  mongoose.connection.on('disconnected', () => {
+    console.log('[MONGODB] - Disconnected.');
+  });
+
+  try {
+    console.log('[MONGODB] - Connecting...');
+    mongoose.connect(databaseConnectionString, options);
+  } catch (error) {
+    console.log('[MONGODB] - initialization failed: ', error);
+  }
+}
 
 /**
  * Function to validate required environment variables
