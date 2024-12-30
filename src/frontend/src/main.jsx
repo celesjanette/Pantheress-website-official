@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { MuiThemeProvider, createTheme} from '@material-ui/core/styles';
 
-import Home from './pages/Home/Home';
+import RegisterUser from './pages/RegisterUser/RegisterUser';
 
 const theme = createTheme({
   palette: {
@@ -20,7 +20,7 @@ render(
           <main>
             <BrowserRouter>
               <Routes>
-                  <Route path='/' element={<Home/>}/>
+                  <Route path='/' element={<RegisterUser/>}/>
               </Routes>
             </BrowserRouter>
           </main>
